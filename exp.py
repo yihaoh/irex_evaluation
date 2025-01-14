@@ -63,7 +63,7 @@ def overlap_pr(r1: tuple, r2: tuple) -> float:
     length2 = end2 - start2
 
     # Calculate the percentage
-    percentage = (length1 / length2) * 100
+    percentage = length1 / length2
     return percentage
 
 
