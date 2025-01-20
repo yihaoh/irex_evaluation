@@ -37,8 +37,8 @@ if __name__ == "__main__":
     parser.add_argument("--pg_sz", type=int, default=50)
     parser.add_argument("--scale", type=int, default=1)
     parser.add_argument("--db", type=str, default="tpch1")
-    parser.add_argument("--user", type=str, default="oursys")
-    parser.add_argument("--password", type=str, default="oursys")
+    parser.add_argument("--user", type=str, default="irex")
+    parser.add_argument("--password", type=str, default="irex")
     parser.add_argument("--host", type=str, default="localhost")
     parser.add_argument("--port", type=int, default=5432)
     parser.add_argument("--threshold", type=float, default=0.3)
@@ -55,9 +55,11 @@ if __name__ == "__main__":
     q_range = range(0, 23)
     # q_range = [i for i in range (0, 23) if i != 18]
     # q_range.append(18)
+    # q_range = [2,4,16,18,20,21,22]
+    # q_range = [2]
 
     for i in q_range:
-        print(f"=============== Processing q{i}.sql ================")
+        print(f"=============== Processing q{i}.sql, scale: {hp.scale}, pg_sz: {hp.pg_sz} ================")
         start = time.time()
         tm = TestManager(f"queries_for_test/q{i}.sql", hp.pg_sz, db_config, hp.threshold, hp.blmfl_fpr, stats=stats)
         print(f"Start milestone query")

@@ -10,12 +10,12 @@ import sys
 import math
 
 DBNAME = "tpch_small"
-USER = "oursys"
-PASSWORD = "oursys"
+USER = "irex"
+PASSWORD = "irex"
 HOST = "localhost"
 PORT = "5432"
-THRESHOLD = 0.3
-BLMFL_FPR = 0.5
+THRESHOLD = 0.5
+BLMFL_FPR = 0.6
 
 
 def sanitize_record_type(iid: str) -> str:
@@ -47,7 +47,7 @@ def sanitize_record_type_for_tuple(iid: str) -> str:
 def sanitize_blmfl(blmfl: str):
     # sample returned from psycopg2.execute: ("\\x6bf9798b593c1ba87b18f616c66ef415",128,50,2,49)
     # need to change " to '
-    return blmfl.replace('"', "'")
+    return blmfl.replace('"', "'").replace("\\\\", "\\")
 
 
 def overlap_pr(r1: tuple, r2: tuple) -> float:
@@ -59,8 +59,8 @@ def overlap_pr(r1: tuple, r2: tuple) -> float:
         raise ValueError("Range1 must be fully contained within Range2.")
     
     # Compute the lengths of the ranges
-    length1 = end1 - start1
-    length2 = end2 - start2
+    length1 = abs(end1 - start1)
+    length2 = abs(end2 - start2)
 
     # Calculate the percentage
     percentage = length1 / length2
@@ -730,6 +730,20 @@ class TestManager:
                 f.write(f"-- ========= Query ID: {t.id} =========\n")
                 for j, q in enumerate(t.instantiated_queries):
                     f.write(subtitles[j])
+                    f.write(f"{q};\n\n")
+                f.write("\n\n")
+        return
+    
+    def export_instantiated_queries_special(self, filepath="") -> None:
+        filename_comp = self.filename.split(".")
+        with open(f"{filepath}/{filename_comp[0].split('/')[-1]}-instantiated.sql", "w+") as f:
+            for i, t in enumerate(self.single_tests):
+                f.write(f"-- ========= Query ID: {t.id} =========\n")
+                for j, q in enumerate(t.instantiated_queries):
+                    if j == 0:
+                        f.write("-- milestone query\n")
+                    else:
+                        f.write(f"-- page {j} query\n")
                     f.write(f"{q};\n\n")
                 f.write("\n\n")
         return
