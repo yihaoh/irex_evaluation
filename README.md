@@ -1,4 +1,6 @@
-# Evaluation of OurSys
+# Evaluation of I-Rex
+
+[Demo Video](https://duke.box.com/v/vldb2026-demo) available.
 
 This repo contains the necessary scripts/queries to reproduce the experiment results in the paper. We assume the OS is Ubuntu.
 
